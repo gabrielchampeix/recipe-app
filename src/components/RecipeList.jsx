@@ -1,7 +1,7 @@
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { recipes } from "../data/recipesBackup";
+import { Fragment } from "react";
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
@@ -27,20 +27,17 @@ export default function RecipeList() {
     })
 
     return (
-        <div>
-            {/* <Recipe title="Manual test" tags={["test", "test"]} /> */}
-            {recipes.map(recipe => (
-                <Recipe title={recipe.title} tags={recipe.tags} />
-            ))}
-            {/* {recipes.map(recipe => (
-                <div key={recipe.id}>
-                    <h3>{recipe.title}</h3>
-                    {recipe.tags.map(tag => (
-                        <p>{tag}</p>
-                    ))}
-                </div>
-            ))} */}
-        </div>
+        <Fragment>
+            <div>
+                <h2>Recipes</h2>
+                {recipes.map(recipe => (
+                    <Recipe title={recipe.title} tags={recipe.tags} />
+                ))}
+            </div>
+            <div>
+                <AddRecipe />
+            </div>
+        </Fragment>
     );
 }
 
@@ -56,3 +53,18 @@ export function Recipe({ title = "title", tags = ["tag"] }) {
         </div>
     )
 }
+
+export function AddRecipe() {
+    return (
+        <div style={{ backgroundColor: "bisque" }}>
+            <h2>Add a recipe</h2>
+            <input id="title" placeholder="title"></input>
+            <div>
+                <h4>Tags</h4>
+                <input id="tag" placeholder="tag"></input>
+                <button>Add</button>
+            </div>
+        </div>
+    )
+}
+
