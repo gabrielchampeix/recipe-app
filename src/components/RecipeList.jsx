@@ -2,6 +2,7 @@ import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Fragment } from "react";
+import { addRecipe } from "../services/recipes";
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
@@ -54,17 +55,37 @@ export function Recipe({ title = "title", tags = ["tag"] }) {
     )
 }
 
+
+
 export function AddRecipe() {
+    const [title, setTitle] = useState("");
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        await addRecipe({
+            title,
+            tags: [],
+            //ingredients: [],
+            //instructions: "",
+        });
+
+        setTitle(""); // reset form
+    }
+
     return (
         <div style={{ backgroundColor: "bisque" }}>
             <h2>Add a recipe</h2>
-            <input id="title" placeholder="title"></input>
-            <div>
-                <h4>Tags</h4>
-                <input id="tag" placeholder="tag"></input>
-                <button>Add</button>
-            </div>
+            <form onSubmit={handleSubmit}>
+                <label for="title">Title:</label>
+                <input required onChange={(e) => setTitle(e.target.value)} type="text" value={title} id="title"></input>
+                <div>
+                    <label for="tag">Tags:</label>
+                    <input type="text" id="tag" placeholder="tag"></input>
+                </div>
+                <button type="submit">Add the recipe</button>
+            </form>
         </div>
     )
 }
+
 
