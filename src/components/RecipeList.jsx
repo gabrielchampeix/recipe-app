@@ -6,18 +6,26 @@ import { addRecipe, subscribeToRecipes, deleteRecipe } from "../services/recipes
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
-
     const recipes = querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
     }));
-
     return recipes;
 }
 
 
 export default function RecipeList() {
     const [recipes, setRecipes] = useState([]);
+    const [search, setSearch] = useState("");
+    const [editing, setEditing] = useState(false)
+    const [editedId, setEditedId] = useState([])
+    const [editedTitle, setEditedTitle] = useState("")
+    const [editedTags, setEditedTags] = useState([])
+
+
+    const filteredRecipes = recipes.filter((recipe) =>
+        recipe.title.toLowerCase().includes(search.toLowerCase())
+    );
 
     useEffect(() => {
         fetchRecipes().then(setRecipes);
@@ -25,56 +33,103 @@ export default function RecipeList() {
 
     useEffect(() => {
         const unsubscribe = subscribeToRecipes(setRecipes);
-
         return () => unsubscribe(); // cleanup
     }, []);
 
     async function handleDelete(id) {
         const confirmed = window.confirm("Delete this recipe?");
         if (!confirmed) return;
-
         await deleteRecipe(id);
     }
 
     return (
         <Fragment>
+            {editing ? <EditModal title={editedTitle} tags={editedTags} id={editedId} closeHandle={() => setEditing(false)} /> : ""}
+            <input
+                type="text"
+                placeholder="Search…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+            ></input>
             <div>
                 <h2>Recipes</h2>
-                {recipes.map((recipe, index) => (
-                    <Recipe deleteHandle={() => handleDelete(recipe.id)} key={index} title={recipe.title} tags={recipe.tags} />
+                {filteredRecipes.map((recipe, index) => (
+                    <Recipe
+                        deleteHandle={() => handleDelete(recipe.id)}
+                        editHandle={() => {
+                            setEditing(true)
+                            setEditedId(recipe.id)
+                            setEditedTitle(recipe.title)
+                            setEditedTags(recipe.tags)
+                        }}
+                        closeHandle={() => setEditing(false)}
+                        key={index} title={recipe.title}
+                        tags={recipe.tags}
+                    />
                 ))}
             </div>
             <div>
-                <AddRecipe />
+                <AddRecipeBox />
             </div>
         </Fragment>
     );
 }
 
-export function Recipe({ title = "title", tags = ["tag"], deleteHandle }) {
+export function Recipe({ title = "title", tags = ["tag"], deleteHandle, editHandle }) {
     return (
         <div style={{ border: "1px solid black" }}>
             <h3>{title}</h3>
-            <div style={{ display: "flex" }}>
+            <ul>
                 {tags.map((tag, index) => (
-                    <p key={index}>{tag}</p>
+                    <Tag key={index} label={tag} />
                 ))}
-            </div>
+            </ul>
             <button onClick={deleteHandle}>Delete</button>
+            <button onClick={editHandle}>Edit</button>
+        </div>
+    )
+}
+
+export function EditModal({ id, title, tags = [], closeHandle }) {
+    return (
+        <div style={{
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "gainsboro",
+            top: "0px",
+            left: "0px",
+            margin: "0"
+        }}>
+            <button onClick={closeHandle} style={{
+                position: "absolute",
+                right: "0px",
+                cursor: "pointer"
+            }}>X</button>
+            <p>Edit recipe ID:{id}</p>
+            <form>
+                <label htmlFor="title">Title</label>
+                <input type="text" id="title" required value={title}></input>
+            </form>
+            <ul>
+                {tags.map((tag, index) => (
+                    <Tag canBeDeleted={true} key={index} label={tag} />
+                ))}
+            </ul>
         </div>
     )
 }
 
 
 
-export function AddRecipe() {
+export function AddRecipeBox() {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
 
     function handleAddTag() {
         if (!tagInput.trim()) {
-            alert("no tag")
+            alert("No tag entered")
             return
         };
 
@@ -84,15 +139,17 @@ export function AddRecipe() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        await addRecipe({
-            title,
-            tags,
-            //ingredients: [],
-            //instructions: "",
-        });
+        if (tags.length > 0) {
+            await addRecipe({
+                title,
+                tags,
+                //ingredients: [],
+                //instructions: "",
+            });
 
-        setTitle(""); // reset form
-        setTags([]);
+            setTitle(""); // reset form
+            setTags([]);
+        } else { alert("You need 1 tag at least") }
     }
 
     return (
@@ -110,13 +167,22 @@ export function AddRecipe() {
                 <button type="button" onClick={handleAddTag}>
                     Add Tag
                 </button>
-                {tags.map((tag, index) => (
-                    <p key={index}>{tag}</p>
-                ))}
+                <ul>
+                    {tags.map((tag, index) => (
+                        <Tag canBeDeleted={true} key={index} label={tag} />
+                    ))}
+                </ul>
                 <button type="submit">Add the recipe</button>
             </form>
         </div>
     )
 }
 
-
+export function Tag({ label = "tag", canBeDeleted = false, tagDeleteHandle = () => { console.log("clicked") } }) {
+    return (
+        <li style={{ padding: "4px", border: "1px solid grey", listStyle: "none", display: "inline" }}>
+            {label}
+            {canBeDeleted ? <button type="button" onClick={tagDeleteHandle}>X</button> : ""}
+        </li>
+    )
+}
