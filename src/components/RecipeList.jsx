@@ -134,7 +134,7 @@ export function EditModal({ id, title, tags = [], closeHandle }) {
                 <ul>
                     <label>Tags:</label>
                     {tags.map((tag, index) => (
-                        <Tag canBeDeleted={true} key={index} label={tag} />
+                        <Tag tagDeleteHandle={removeTag} canBeDeleted={true} key={index} label={tag} />
                     ))}
                 </ul>
                 <button type="submit">Confirm</button>
@@ -150,6 +150,10 @@ export function AddRecipeBox() {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
+
+    const removeTag = (tagToRemove) => {
+        setTags((prev) => prev.filter((tag) => tag !== tagToRemove));
+    };
 
     function handleAddTag() {
         if (!tagInput.trim()) {
@@ -193,7 +197,7 @@ export function AddRecipeBox() {
                 </button>
                 <ul>
                     {tags.map((tag, index) => (
-                        <Tag canBeDeleted={true} key={index} label={tag} />
+                        <Tag tagDeleteHandle={removeTag} canBeDeleted={true} key={index} label={tag} />
                     ))}
                 </ul>
                 <button type="submit">Add the recipe</button>
@@ -202,11 +206,11 @@ export function AddRecipeBox() {
     )
 }
 
-export function Tag({ label = "tag", canBeDeleted = false, tagDeleteHandle = () => { console.log("clicked") } }) {
+export function Tag({ label = "tag", canBeDeleted = false, tagDeleteHandle }) {
     return (
         <li style={{ padding: "4px", border: "1px solid grey", listStyle: "none", display: "inline" }}>
             {label}
-            {canBeDeleted ? <button type="button" onClick={tagDeleteHandle}>X</button> : ""}
+            {canBeDeleted ? <button type="button" onClick={() => tagDeleteHandle(label)}>X</button> : ""}
         </li>
     )
 }
