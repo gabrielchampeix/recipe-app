@@ -46,7 +46,7 @@ export default function RecipeList() {
         <Fragment>
             {editing ? <EditModal
                 title={editedTitle}
-                ags={editedTags}
+                tags={editedTags}
                 id={editedId}
                 closeHandle={() => setEditing(false)} /> : ""
             }
@@ -96,15 +96,20 @@ export function Recipe({ title = "title", tags = ["tag"], deleteHandle, editHand
 }
 
 export function EditModal({ id, title, tags = [], closeHandle }) {
+    const [newTags, setNewTags] = useState(tags)
     const [newTitle, setNewTitle] = useState(title)
 
-    async function confirmChangeHandle(e, id, newTitle) {
+    async function confirmChangeHandle(e, id, newTitle, newTags) {
         e.preventDefault();
         console.log("confirm")
         const confirmed = window.confirm("Are you sure you want to modify this recipe?");
         if (!confirmed) return;
-        await editRecipe(id, newTitle)
+        await editRecipe(id, newTitle, newTags)
     }
+
+    const removeTag = (tagToRemove) => {
+        setNewTags((prev) => prev.filter((tag) => tag !== tagToRemove));
+    };
 
     return (
         <div style={{
@@ -122,18 +127,18 @@ export function EditModal({ id, title, tags = [], closeHandle }) {
                 cursor: "pointer"
             }}>X</button>
             <p>Edit {title}</p>
-            <form onSubmit={(e) => confirmChangeHandle(e, id, newTitle,)}>
+            <form onSubmit={(e) => confirmChangeHandle(e, id, newTitle, newTags)}>
                 <label htmlFor="title">New title:</label>
                 <input
                     onChange={(e) => {
                         setNewTitle(e.target.value)
                         console.log(newTitle)
                     }}
-                    type="text" id="title" required></input>
+                    type="text" id="title"></input>
 
                 <ul>
                     <label>Tags:</label>
-                    {tags.map((tag, index) => (
+                    {newTags.map((tag, index) => (
                         <Tag tagDeleteHandle={removeTag} canBeDeleted={true} key={index} label={tag} />
                     ))}
                 </ul>

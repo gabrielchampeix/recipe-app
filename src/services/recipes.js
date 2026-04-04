@@ -30,9 +30,11 @@ export async function deleteRecipe(id) {
     await deleteDoc(doc(db, "recipes", id));
 }
 
-export async function editRecipe(id, newTitle) {
+export async function editRecipe(id, newTitle, newTags) {
     const docRef = doc(db, "recipes", id);
+    console.log("newTags:", newTags);
     await updateDoc(docRef, {
-        title: newTitle
+        title: newTitle,
+        tags: newTags
     });
 }
