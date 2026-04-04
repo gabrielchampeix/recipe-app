@@ -91,6 +91,7 @@ export function Recipe({ title = "title", tags = ["tag"], deleteHandle, editHand
 }
 
 export function EditModal({ id, title, tags = [], closeHandle }) {
+    const [newTitle, setNewTitle] = useState(title)
     return (
         <div style={{
             position: "absolute",
@@ -106,16 +107,25 @@ export function EditModal({ id, title, tags = [], closeHandle }) {
                 right: "0px",
                 cursor: "pointer"
             }}>X</button>
-            <p>Edit recipe ID:{id}</p>
+            <p>Edit {title}</p>
             <form>
-                <label htmlFor="title">Title</label>
-                <input type="text" id="title" required value={title}></input>
+                <label htmlFor="title">Title:</label>
+                <input
+                    onChange={(e) => {
+                        setNewTitle(e.target.value)
+                        console.log(newTitle)
+                    }}
+                    type="text" id="title" required></input>
+
+                <ul>
+                    <label>Tags:</label>
+                    {tags.map((tag, index) => (
+                        <Tag canBeDeleted={true} key={index} label={tag} />
+                    ))}
+                </ul>
+                <button type="submit">Confirm</button>
             </form>
-            <ul>
-                {tags.map((tag, index) => (
-                    <Tag canBeDeleted={true} key={index} label={tag} />
-                ))}
-            </ul>
+
         </div>
     )
 }
