@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, addDoc, doc, serverTimestamp, onSnapshot, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, serverTimestamp, onSnapshot, deleteDoc } from "firebase/firestore";
 
 export function subscribeToRecipes(callback) {
     const unsubscribe = onSnapshot(collection(db, "recipes"), (snapshot) => {
@@ -28,4 +28,11 @@ export async function addRecipe(recipe) {
 
 export async function deleteRecipe(id) {
     await deleteDoc(doc(db, "recipes", id));
+}
+
+export async function editRecipe(id, newTitle) {
+    const docRef = doc(db, "recipes", id);
+    await updateDoc(docRef, {
+        title: newTitle
+    });
 }

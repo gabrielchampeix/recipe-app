@@ -2,7 +2,7 @@ import { db } from "../firebase";
 import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Fragment } from "react";
-import { addRecipe, subscribeToRecipes, deleteRecipe } from "../services/recipes";
+import { addRecipe, subscribeToRecipes, deleteRecipe, editRecipe } from "../services/recipes";
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
@@ -44,7 +44,12 @@ export default function RecipeList() {
 
     return (
         <Fragment>
-            {editing ? <EditModal title={editedTitle} tags={editedTags} id={editedId} closeHandle={() => setEditing(false)} /> : ""}
+            {editing ? <EditModal
+                title={editedTitle}
+                ags={editedTags}
+                id={editedId}
+                closeHandle={() => setEditing(false)} /> : ""
+            }
             <input
                 type="text"
                 placeholder="Search…"
@@ -92,6 +97,15 @@ export function Recipe({ title = "title", tags = ["tag"], deleteHandle, editHand
 
 export function EditModal({ id, title, tags = [], closeHandle }) {
     const [newTitle, setNewTitle] = useState(title)
+
+    async function confirmChangeHandle(e, id, newTitle) {
+        e.preventDefault();
+        console.log("confirm")
+        const confirmed = window.confirm("Are you sure you want to modify this recipe?");
+        if (!confirmed) return;
+        await editRecipe(id, newTitle)
+    }
+
     return (
         <div style={{
             position: "absolute",
@@ -108,8 +122,8 @@ export function EditModal({ id, title, tags = [], closeHandle }) {
                 cursor: "pointer"
             }}>X</button>
             <p>Edit {title}</p>
-            <form>
-                <label htmlFor="title">Title:</label>
+            <form onSubmit={(e) => confirmChangeHandle(e, id, newTitle,)}>
+                <label htmlFor="title">New title:</label>
                 <input
                     onChange={(e) => {
                         setNewTitle(e.target.value)
