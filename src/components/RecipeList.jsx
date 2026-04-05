@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Fragment } from "react";
 import { subscribeToRecipes, deleteRecipe, editRecipe } from "../services/recipes";
@@ -7,6 +7,7 @@ import Tag from "./Tag";
 import AddRecipeBox from "./AddRecipeBox";
 import Recipe from "./Recipe";
 import EditModal from "./EditModal";
+import SearchBar from "./SearchBar";
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
@@ -20,14 +21,18 @@ async function fetchRecipes() {
 
 export default function RecipeList() {
     const [recipes, setRecipes] = useState([]);
-    const [search, setSearch] = useState("");
     const [editing, setEditing] = useState(false)
+    const [searchTitle, setSearchTitle] = useState("");
     const [editedId, setEditedId] = useState([])
     const [editedTitle, setEditedTitle] = useState("")
     const [editedTags, setEditedTags] = useState([])
 
     const filteredRecipes = recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(search.toLowerCase())
+        recipe.title.toLowerCase().includes(searchTitle.toLowerCase())
+        // ||
+        // recipe.tags.some((tag) =>
+        //     tag.toLowerCase().includes(searchTitle.toLowerCase())
+        // )
     );
 
     useEffect(() => {
@@ -53,12 +58,9 @@ export default function RecipeList() {
                 id={editedId}
                 closeHandle={() => setEditing(false)} /> : ""
             }
-            <input
-                type="text"
-                placeholder="Search…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            ></input>
+
+            <SearchBar titleValue={searchTitle} titleChangeHandle={(e) => setSearchTitle(e.target.value)} />
+
             <div>
                 <h2>Recipes</h2>
                 {filteredRecipes.map((recipe, index) => (

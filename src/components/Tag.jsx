@@ -1,4 +1,4 @@
-export default function Tag({ label = "tag", canBeDeleted = false, tagDeleteHandle }) {
+export default function Tag({ label = "tag", canBeSelected = false, canBeDeleted = false, tagDeleteHandle }) {
     return (
         <li style={{ padding: "4px", border: "1px solid grey", listStyle: "none", display: "inline" }}>
             {label}

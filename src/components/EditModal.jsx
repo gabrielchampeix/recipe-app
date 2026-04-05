@@ -15,7 +15,7 @@ export default function EditModal({ id, title, tags = [], closeHandle }) {
         await editRecipe(id, newTitle, newTags)
     }
 
-    const removeTag = (tagToRemove) => {
+    function removeTag(tagToRemove) {
         setNewTags((prev) => prev.filter((tag) => tag !== tagToRemove));
     };
 
