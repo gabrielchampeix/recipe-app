@@ -1,16 +1,19 @@
 import Tag from "./Tag"
+import "./RecipeList.css"
 
 export default function Recipe({ title = "title", tags = ["tag"], deleteHandle, editHandle }) {
     return (
-        <div style={{ border: "1px solid black" }}>
+        <div className="recipe">
             <h3>{title}</h3>
             <ul>
                 {tags.map((tag, index) => (
                     <Tag key={index} label={tag} />
                 ))}
             </ul>
-            <button onClick={deleteHandle}>Delete</button>
-            <button onClick={editHandle}>Edit</button>
+            <div className="recipe-buttons-container">
+                <button onClick={deleteHandle}>Delete</button>
+                <button onClick={editHandle}>Edit</button>
+            </div>
         </div>
     )
 }

@@ -37,7 +37,7 @@ export default function AddRecipeBox() {
     }
 
     return (
-        <div style={{ backgroundColor: "bisque" }}>
+        <div className="addRecipeBox">
             <h2>Add a recipe</h2>
             <form onSubmit={handleSubmit}>
                 <label for="title">Title:</label>

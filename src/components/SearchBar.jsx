@@ -21,17 +21,18 @@ export default function SearchBar({ titleValue, titleChangeHandle }) {
     console.log(tags)
 
     return (
-        <Fragment>
+        <div className="searchBar">
+            <h4>Search</h4>
             <input
                 type="text"
                 placeholder="Search…"
                 value={titleValue}
                 onChange={titleChangeHandle}
             ></input>
-            <div style={{ display: "flex", flexWrap: "wrap" }}>{tags.map(tag => (
+            <div className="tag-container">{tags.map(tag => (
                 <Tag label={tag.label} />
             ))
             }</div>
-        </Fragment>
+        </div>
     )
 }

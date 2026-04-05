@@ -1,0 +1,73 @@
+.recipeListView {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.recipe {
+    background-color: rgb(235, 235, 235);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    border-radius: 8px;
+}
+
+.recipe-buttons-container {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tag {
+    border-radius: 24px;
+    padding: 4px 12px;
+    list-style: none;
+    display: inline;
+    line-height: 1;
+    background-color: none;
+    color: black;
+    border: 1px solid black;
+    user-select: none;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.tag-selected {
+    background-color: black;
+    color: white;
+}
+
+.searchBar {
+    display: flex;
+    flex-direction: column;
+    background-color: beige;
+    padding: 12px;
+    gap: 8px;
+    border-radius: 16px;
+    position: sticky;
+    top: 72px;
+}
+
+.recipesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.addRecipeBox {
+    background-color: black;
+    color: white;
+    padding: 16px;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    left: 24px;
+}

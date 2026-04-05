@@ -51,7 +51,7 @@ export default function RecipeList() {
     }
 
     return (
-        <Fragment>
+        <div className="recipeListView">
             {editing ? <EditModal
                 title={editedTitle}
                 tags={editedTags}
@@ -61,8 +61,7 @@ export default function RecipeList() {
 
             <SearchBar titleValue={searchTitle} titleChangeHandle={(e) => setSearchTitle(e.target.value)} />
 
-            <div>
-                <h2>Recipes</h2>
+            <div className="recipesList">
                 {filteredRecipes.map((recipe, index) => (
                     <Recipe
                         deleteHandle={() => handleDelete(recipe.id)}
@@ -78,9 +77,7 @@ export default function RecipeList() {
                     />
                 ))}
             </div>
-            <div>
-                <AddRecipeBox />
-            </div>
-        </Fragment>
+            <AddRecipeBox />
+        </div>
     );
 }

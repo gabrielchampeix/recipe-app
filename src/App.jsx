@@ -41,7 +41,7 @@ export default function App() {
   if (!user) {
     return (
       <Fragment>
-        <div style={{ padding: 20 }}>
+        <div>
           <h2>Login</h2>
 
           <input
@@ -66,9 +66,9 @@ export default function App() {
   // ✅ Logged in
   return (
     <Fragment>
-      <div>
-        <h2>Welcome</h2>
-        <p>{user.email}</p>
+      <div style={{ display: "flex", justifyContent: "space-between", height: "48px", alignItems: "center" }}>
+        <h1>Menoo</h1>
+        {/* <p>{user.email}</p> */}
 
 
         <button onClick={logout}>Logout</button>
