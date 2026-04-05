@@ -32,7 +32,6 @@ export async function deleteRecipe(id) {
 
 export async function editRecipe(id, newTitle, newTags) {
     const docRef = doc(db, "recipes", id);
-    console.log("newTags:", newTags);
     await updateDoc(docRef, {
         title: newTitle,
         tags: newTags
