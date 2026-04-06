@@ -30,7 +30,7 @@ export default function EditModal({ id, title, tags = [], closeHandle }) {
     }
 
     return (
-        <div style={{
+        <div className="edit-modal" style={{
             position: "absolute",
             width: "100%",
             height: "100%",

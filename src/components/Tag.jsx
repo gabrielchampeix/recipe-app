@@ -1,12 +1,15 @@
 import { useState } from "react"
 
 export default function Tag({ label = "tag", canBeSelected = false, canBeDeleted = false, tagDeleteHandle, clickHandle }) {
-    const [selected, setSelected] = useState(false)
+    const [selected, setSelected] = useState(canBeSelected ? true : false)
     return (
-        <li className={selected ? "tag tag-selected" : "tag"} onClick={() => setSelected(!selected)}
+        <li className={selected ? "tag tag-selected" : "tag"} onClick={() => {
+            if (clickHandle) clickHandle(label);
+            setSelected(!selected);
+        }}
         >
             {label}
-            {canBeDeleted ? <button type="button" onClick={() => tagDeleteHandle(label)}>X</button> : ""}
+            {canBeDeleted ? <button className="close-button" type="button" onClick={() => tagDeleteHandle(label)}>X</button> : ""}
         </li>
     )
 }

@@ -45,7 +45,7 @@
     color: white;
 }
 
-.searchBar {
+.search-bar {
     display: flex;
     flex-direction: column;
     background-color: beige;
@@ -62,12 +62,53 @@
     gap: 16px;
 }
 
-.addRecipeBox {
-    background-color: black;
-    color: white;
+.add-recipe-box {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.edit-modal {
+    z-index: 1;
+}
+
+.close-button {
+    height: 24px;
+    width: 24px;
+    padding: none;
+}
+
+.add-recipe-form {
+    background-color: antiquewhite;
     padding: 16px;
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    left: 24px;
+    height: 60%;
+    bottom: 0px;
+    position: absolute;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 1;
+    transform: translateY(88%);
+    transition: all 0.5s cubic-bezier(0.03, 0.13, 0.17, 1);
+}
+
+.add-recipe-box-active .add-recipe-form {
+    transform: translateY(0%);
+}
+
+.add-recipe-background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    transition: all 0.5s cubic-bezier(0.03, 0.13, 0.17, 1);
+    backdrop-filter: blur(0px) brightness(1);
+}
+
+.add-recipe-box-active .add-recipe-background {
+    backdrop-filter: blur(4px) brightness(0.5);
+    pointer-events: none;
 }

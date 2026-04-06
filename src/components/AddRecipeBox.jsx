@@ -37,27 +37,30 @@ export default function AddRecipeBox() {
     }
 
     return (
-        <div className="addRecipeBox">
-            <h2>Add a recipe</h2>
-            <form onSubmit={handleSubmit}>
-                <label for="title">Title:</label>
-                <input required onChange={(e) => setTitle(e.target.value)} type="text" value={title} id="title"></input>
+        <div className="add-recipe-box add-recipe-box-active">
+            <div className="add-recipe-form add-recipe-form-active">
+                <h2>Add a recipe</h2>
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="title">Title:</label>
+                    <input required onChange={(e) => setTitle(e.target.value)} type="text" value={title} id="title"></input>
 
-                <label for="tag">Tags:</label>
-                <input
-                    onChange={(e) => setTagInput(e.target.value)}
-                    value={tagInput} type="text" id="tag" placeholder="tag">
-                </input>
-                <button type="button" onClick={handleAddTag}>
-                    Add Tag
-                </button>
-                <ul>
-                    {tags.map((tag, index) => (
-                        <Tag tagDeleteHandle={removeTag} canBeDeleted={true} key={index} label={tag} />
-                    ))}
-                </ul>
-                <button type="submit">Add the recipe</button>
-            </form>
+                    <label htmlFor="tag">Tags:</label>
+                    <input
+                        onChange={(e) => setTagInput(e.target.value)}
+                        value={tagInput} type="text" id="tag" placeholder="tag">
+                    </input>
+                    <button type="button" onClick={handleAddTag}>
+                        Add Tag
+                    </button>
+                    <ul>
+                        {tags.map((tag, index) => (
+                            <Tag tagDeleteHandle={removeTag} canBeDeleted={true} key={index} label={tag} />
+                        ))}
+                    </ul>
+                    <button type="submit">Add the recipe</button>
+                </form>
+            </div>
+            <div className="add-recipe-background add-recipe-background-active"></div>
         </div>
     )
 }

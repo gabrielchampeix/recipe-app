@@ -1,13 +1,12 @@
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Fragment } from "react";
 import { subscribeToRecipes, deleteRecipe, editRecipe } from "../services/recipes";
-import Tag from "./Tag";
 import AddRecipeBox from "./AddRecipeBox";
 import Recipe from "./Recipe";
 import EditModal from "./EditModal";
-import SearchBar from "./SearchBar";
+import SearchBarTitle from "./SearchBarTitle";
+import SearchBarTags from "./SearchBarTags";
 
 async function fetchRecipes() {
     const querySnapshot = await getDocs(collection(db, "recipes"));
@@ -18,26 +17,55 @@ async function fetchRecipes() {
     return recipes;
 }
 
+async function fetchTags() {
+    const querySnapshot = await getDocs(collection(db, "tags"));
+    const tags = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
+    return tags;
+}
+
 
 export default function RecipeList() {
     const [recipes, setRecipes] = useState([]);
+    const [tags, setTags] = useState([]);
     const [editing, setEditing] = useState(false)
     const [searchTitle, setSearchTitle] = useState("");
+    const [searchTags, setSearchTags] = useState([])
     const [editedId, setEditedId] = useState([])
     const [editedTitle, setEditedTitle] = useState("")
     const [editedTags, setEditedTags] = useState([])
 
-    const filteredRecipes = recipes.filter((recipe) =>
-        recipe.title.toLowerCase().includes(searchTitle.toLowerCase())
-        // ||
-        // recipe.tags.some((tag) =>
-        //     tag.toLowerCase().includes(searchTitle.toLowerCase())
-        // )
-    );
+    console.log(recipes)
+
+    // Handle tag selection/deselection
+    const handleTagClick = (tagLabel) => {
+        setSearchTags(prev =>
+            prev.includes(tagLabel)
+                ? prev.filter(tag => tag !== tagLabel)
+                : [...prev, tagLabel]
+        );
+    };
+
+    const filteredRecipes = recipes.filter((recipe) => {
+        const titleMatch = recipe.title.toLowerCase().includes(searchTitle.toLowerCase());
+        //const tagsMatch = searchTags.length === 0 || searchTags.some(tag => recipe.tags?.includes(tag));
+        // return titleMatch && tagsMatch;
+        return titleMatch;
+    });
 
     useEffect(() => {
         fetchRecipes().then(setRecipes);
     }, []);
+
+    useEffect(() => {
+        fetchTags().then((fetchedTags) => {
+            setTags(fetchedTags);
+            setSearchTags(fetchedTags.map(tag => tag.label));
+        });
+    }, []);
+    // console.log(tags)
 
     useEffect(() => {
         const unsubscribe = subscribeToRecipes(setRecipes);
@@ -59,7 +87,11 @@ export default function RecipeList() {
                 closeHandle={() => setEditing(false)} /> : ""
             }
 
-            <SearchBar titleValue={searchTitle} titleChangeHandle={(e) => setSearchTitle(e.target.value)} />
+            <div className="search-bar">
+                <SearchBarTitle titleValue={searchTitle} titleChangeHandle={(e) => setSearchTitle(e.target.value)} />
+                <SearchBarTags tags={tags} tagClickHandle={handleTagClick} />
+            </div>
+
 
             <div className="recipesList">
                 {filteredRecipes.map((recipe, index) => (
