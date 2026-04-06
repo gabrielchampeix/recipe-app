@@ -37,7 +37,7 @@ export default function AddRecipeBox() {
     }
 
     return (
-        <div className="add-recipe-box add-recipe-box-active">
+        <div className="add-recipe-box">
             <div className="add-recipe-form add-recipe-form-active">
                 <h2>Add a recipe</h2>
                 <form onSubmit={handleSubmit}>
