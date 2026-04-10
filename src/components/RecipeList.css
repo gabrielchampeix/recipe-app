@@ -1,7 +1,18 @@
-.recipeListView {
+@keyframes fade-in {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.recipe-list-view {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    padding: 16px;
 }
 
 .recipe {
@@ -12,6 +23,11 @@
     gap: 8px;
     align-items: flex-start;
     border-radius: 8px;
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
 .recipe-buttons-container {
@@ -54,15 +70,17 @@
     border-radius: 16px;
     position: sticky;
     top: 72px;
+    z-index: 1;
 }
 
 .recipesList {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin: 56px 0;
 }
 
-.add-recipe-box {
+/* .add-recipe-box {
     height: 100%;
     position: absolute;
     width: 100%;
@@ -71,22 +89,36 @@
     pointer-events: none;
 }
 
+.add-recipe-box-active {
+    pointer-events: all;
+} */
+
+
+
 .edit-modal {
     z-index: 1;
-}
-
-.close-button {
-    height: 24px;
-    width: 24px;
-    padding: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: gainsboro;
+    top: 0;
+    left: 0;
+    margin: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
 }
 
 .add-recipe-form {
     background-color: antiquewhite;
     padding: 16px;
     height: 60%;
+    width: 100%;
     bottom: 0px;
-    position: absolute;
+    left: 0px;
+    position: fixed;
     border-radius: 16px 16px 0 0;
     display: flex;
     flex-direction: column;
@@ -96,9 +128,20 @@
     transition: all 0.5s cubic-bezier(0.03, 0.13, 0.17, 1);
 }
 
-.add-recipe-box-active .add-recipe-form {
+/* .add-recipe-box-active .add-recipe-form {
+    transform: translateY(0%);
+} */
+
+.add-recipe-form-active {
     transform: translateY(0%);
 }
+
+/* .add-recipe-from-active::before {
+    content: 'dd';
+    width: 100%;
+    height: 100%;
+    background-color: aqua;
+} */
 
 .add-recipe-background {
     position: absolute;
@@ -111,4 +154,9 @@
 .add-recipe-box-active .add-recipe-background {
     backdrop-filter: blur(4px) brightness(0.5);
     pointer-events: none;
+}
+
+.add-recipe-box-header {
+    display: flex;
+    justify-content: space-between;
 }

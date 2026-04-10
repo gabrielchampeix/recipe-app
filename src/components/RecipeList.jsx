@@ -39,6 +39,7 @@ export default function RecipeList() {
 
     console.log(recipes)
 
+
     // Handle tag selection/deselection
     const handleTagClick = (tagLabel) => {
         setSearchTags(prev =>
@@ -50,9 +51,12 @@ export default function RecipeList() {
 
     const filteredRecipes = recipes.filter((recipe) => {
         const titleMatch = recipe.title.toLowerCase().includes(searchTitle.toLowerCase());
-        //const tagsMatch = searchTags.length === 0 || searchTags.some(tag => recipe.tags?.includes(tag));
-        // return titleMatch && tagsMatch;
-        return titleMatch;
+        const tagsMatch = searchTags.length === 0 ||
+            (recipe.tags && recipe.tags.length > 0 && recipe.tags.some(recipeTag =>
+                searchTags.includes(recipeTag)
+            ));
+
+        return titleMatch && tagsMatch;
     });
 
     useEffect(() => {
@@ -61,14 +65,26 @@ export default function RecipeList() {
 
     useEffect(() => {
         fetchTags().then((fetchedTags) => {
-            setTags(fetchedTags);
-            setSearchTags(fetchedTags.map(tag => tag.label));
+            // Trim tag labels to avoid whitespace issues
+            const trimmedTags = fetchedTags.map(tag => ({
+                ...tag,
+                label: tag.label.trim()
+            }));
+            setTags(trimmedTags);
+            setSearchTags(trimmedTags.map(tag => tag.label));
         });
     }, []);
     // console.log(tags)
 
     useEffect(() => {
-        const unsubscribe = subscribeToRecipes(setRecipes);
+        const unsubscribe = subscribeToRecipes((recipesData) => {
+            // Trim tags in recipes to avoid whitespace issues
+            const trimmedRecipes = recipesData.map(recipe => ({
+                ...recipe,
+                tags: recipe.tags?.map(tag => tag.trim()) || []
+            }));
+            setRecipes(trimmedRecipes);
+        });
         return () => unsubscribe(); // cleanup
     }, []);
 
@@ -79,7 +95,7 @@ export default function RecipeList() {
     }
 
     return (
-        <div className="recipeListView">
+        <div className="recipe-list-view">
             {editing ? <EditModal
                 title={editedTitle}
                 tags={editedTags}
@@ -109,7 +125,7 @@ export default function RecipeList() {
                     />
                 ))}
             </div>
-            <AddRecipeBox />
+            <AddRecipeBox tagsToSelect={tags} />
         </div>
     );
 }

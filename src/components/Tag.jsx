@@ -4,8 +4,10 @@ export default function Tag({ label = "tag", canBeSelected = false, canBeDeleted
     const [selected, setSelected] = useState(canBeSelected ? true : false)
     return (
         <li className={selected ? "tag tag-selected" : "tag"} onClick={() => {
-            if (clickHandle) clickHandle(label);
-            setSelected(!selected);
+            if (canBeSelected) {
+                if (clickHandle) clickHandle(label);
+                setSelected(!selected);
+            }
         }}
         >
             {label}

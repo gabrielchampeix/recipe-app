@@ -66,9 +66,8 @@ export default function App() {
   // ✅ Logged in
   return (
     <Fragment>
-      <div style={{ display: "flex", justifyContent: "space-between", height: "48px", alignItems: "center" }}>
+      <div className="app-header">
         <h1>Menoo</h1>
-        {/* <p>{user.email}</p> */}
 
 
         <button onClick={logout}>Logout</button>

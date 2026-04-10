@@ -7,7 +7,7 @@ export default function Recipe({ title = "title", tags = ["tag"], deleteHandle, 
             <h3>{title}</h3>
             <ul>
                 {tags.map((tag, index) => (
-                    <Tag key={index} label={tag} />
+                    <Tag canBeSelected={false} key={index} label={tag} />
                 ))}
             </ul>
             <div className="recipe-buttons-container">

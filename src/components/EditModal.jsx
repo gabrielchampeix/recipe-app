@@ -30,15 +30,7 @@ export default function EditModal({ id, title, tags = [], closeHandle }) {
     }
 
     return (
-        <div className="edit-modal" style={{
-            position: "absolute",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "gainsboro",
-            top: "0px",
-            left: "0px",
-            margin: "0"
-        }}>
+        <div className="edit-modal">
 
 
             {/* CLOSE BUTTON */}
@@ -50,7 +42,7 @@ export default function EditModal({ id, title, tags = [], closeHandle }) {
 
 
             {/* EDIT SECTION */}
-            <p>Edit {title}</p>
+            <h3>Edit recipe "{title}"</h3>
             <form onSubmit={(e) => confirmChangeHandle(e, id, newTitle, newTags)}>
                 {/* Title */}
                 <label htmlFor="title">New title:</label>
@@ -58,7 +50,7 @@ export default function EditModal({ id, title, tags = [], closeHandle }) {
                     onChange={(e) => {
                         setNewTitle(e.target.value)
                     }}
-                    type="text" id="title"></input>
+                    type="text" id="title" placeholder={title}></input>
                 {/* Tags */}
                 <ul>
                     <label>Tags:</label>
